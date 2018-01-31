@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Provides AWS CloudWatch reporting capability to App Metrics</Description>
+    <AssemblyTitle>App.Metrics.Reporting.Http</AssemblyTitle>
+    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+    <PackageTags>appmetrics;reporting;cloudwatch;aws</PackageTags>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Mark Edwards</Authors>
+    <Company>KCF Technologies, Inc.</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="App.Metrics.Core" Version="2.0.0-alpha" />
+    <PackageReference Include="AWSSDK.CloudWatch" Version="3.3.5.1" />
+  </ItemGroup>
+</Project>
