@@ -63,31 +63,31 @@ namespace App.Metrics.Reporting.CloudWatch
             {
                 foreach (var item in context.ApdexScores)
                 {
-                    if(!await AddDatum($"[{context.Context}] {item.Name}", metricsData.Timestamp, item.Value.Score, metrics))
+                    if(!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value.Score, metrics))
                         return false;
                 }
 
                 foreach (var item in context.Counters)
                 {
-                    if (!await AddDatum($"[{context.Context}] {item.Name}", metricsData.Timestamp, item.Value.Count, metrics))
+                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value.Count, metrics))
                         return false;
                 }
 
                 foreach (var item in context.Gauges)
                 {
-                    if (!await AddDatum($"[{context.Context}] {item.Name}", metricsData.Timestamp, item.Value, metrics))
+                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value, metrics))
                         return false;
                 }
 
                 foreach (var item in context.Meters)
                 {
-                    if (!await AddDatum($"[{context.Context}] {item.Name}", metricsData.Timestamp, item.Value.Count, metrics))
+                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value.Count, metrics))
                         return false;
                 }
 
                 foreach (var item in context.Timers)
                 {
-                    if (!await AddDatum($"[{context.Context}] {item.Name}", metricsData.Timestamp, item.Value.Histogram.Mean, metrics))
+                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value.Histogram.Mean, metrics))
                         return false;
                 }
             }
