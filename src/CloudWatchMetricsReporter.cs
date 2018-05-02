@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.CloudWatch;
@@ -63,31 +64,31 @@ namespace App.Metrics.Reporting.CloudWatch
             {
                 foreach (var item in context.ApdexScores)
                 {
-                    if(!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value.Score, metrics))
+                    if(!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", item.Unit, metricsData.Timestamp, item.Value.Score, metrics))
                         return false;
                 }
 
                 foreach (var item in context.Counters)
                 {
-                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value.Count, metrics))
+                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", item.Unit, metricsData.Timestamp, item.Value.Count, metrics))
                         return false;
                 }
 
                 foreach (var item in context.Gauges)
                 {
-                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value, metrics))
+                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", item.Unit, metricsData.Timestamp, item.Value, metrics))
                         return false;
                 }
 
                 foreach (var item in context.Meters)
                 {
-                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value.Count, metrics))
+                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", item.Unit, metricsData.Timestamp, item.Value.Count, metrics))
                         return false;
                 }
-
+                
                 foreach (var item in context.Timers)
                 {
-                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", metricsData.Timestamp, item.Value.Histogram.Mean, metrics))
+                    if (!await AddDatum($"[{context.Context}] {item.MultidimensionalName}", item.Unit, metricsData.Timestamp, item.Value.Histogram.Mean, metrics))
                         return false;
                 }
             }
@@ -95,7 +96,7 @@ namespace App.Metrics.Reporting.CloudWatch
             return await SendMetrics(metrics);
         }
 
-        private async Task<bool> AddDatum(string name, DateTime timestamp, double value, List<MetricDatum> metrics)
+        private async Task<bool> AddDatum(string name, Unit unit, DateTime timestamp, double value, List<MetricDatum> metrics)
         {
             if (double.IsNaN(value) || double.IsInfinity(value))
                 return true;
@@ -103,7 +104,7 @@ namespace App.Metrics.Reporting.CloudWatch
             metrics.Add(new MetricDatum
                         {
                             Dimensions = _dimensions,
-                            MetricName = name,
+                            MetricName = $"{name}-{GetCloudWatchUnitName(unit)}",
                             Timestamp = timestamp,
                             Unit = StandardUnit.None,
                             Value = value
@@ -113,6 +114,11 @@ namespace App.Metrics.Reporting.CloudWatch
                 return await SendMetrics(metrics);
 
             return true;
+        }
+
+        private string GetCloudWatchUnitName(Unit unit)
+        {
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(unit.ToString());
         }
 
         private async Task<bool> SendMetrics(List<MetricDatum> metrics)

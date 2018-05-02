@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Provides AWS CloudWatch reporting capability to App Metrics</Description>
     <AssemblyTitle>App.Metrics.Reporting.Http</AssemblyTitle>
-    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>appmetrics;reporting;cloudwatch;aws</PackageTags>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
